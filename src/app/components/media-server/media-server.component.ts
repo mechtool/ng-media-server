@@ -10,7 +10,7 @@ export class MediaServerComponent implements OnInit {
   src = ''
   constructor() { }
     onStartVideo(){
-      this.src = 'http://localhost:7000/live/stream/index.m3u8';
+      this.src = 'http://localhost:7000/media/live/stream/index.m3u8';
     }
 
 
