@@ -7,10 +7,14 @@ declare const MediaRecorder ;
   styleUrls: ['./media-server.component.css']
 })
 export class MediaServerComponent implements OnInit {
-
+  src = ''
   constructor() { }
+    onStartVideo(){
+      this.src = 'http://localhost:7000/live/stream/index.m3u8';
+    }
 
-    onStartTranslation(){
+
+  onStartTranslation(){
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
              navigator.mediaDevices.getUserMedia (
                 {
