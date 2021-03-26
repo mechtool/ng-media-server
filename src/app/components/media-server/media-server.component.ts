@@ -10,41 +10,49 @@ export class MediaServerComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices.getUserMedia (
-          {
-            audio: true,
-            video : true,
-          }).then(function(stream) {
+    onStartTranslation(){
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+             navigator.mediaDevices.getUserMedia (
+                {
+                    audio: true,
+                    video : true,
+                }).then(  stream => {
 
-          let url = window.location.origin.replace('http', 'ws');
-          const ws = new WebSocket(url + '/');
+                let url = window.location.origin.replace('http', 'ws');
+                const ws = new WebSocket(url + '/');
 
-          ws.addEventListener('open', (e) => {
-            console.log('WebSocket Open', e);
-          });
-          ws.addEventListener('close', (e) => {
-            console.log('WebSocket Close', e);
-          });
+                ws.addEventListener('open', (e) => {
+                    console.log('WebSocket Open', e);
+                });
+                ws.addEventListener('close', (e) => {
+                    ws.close();
+                    console.log('WebSocket Close', e);
+                });
 
-          const mediaRecorder = MediaRecorder(stream, {
-              mimeType: 'video/webm;codecs=h264',
-              videoBitsPerSecond: 3 * 1024 * 1024
-        });
-              mediaRecorder.addEventListener('dataavailable', (e) => {
-                ws.send(e.data);
-              });
-              mediaRecorder.addEventListener('stop', ws.close.bind(ws));
-              mediaRecorder.start(1000); // Start recording, and dump data every second
+                const mediaRecorder = new MediaRecorder(stream, {
+                     mimeType: 'video/webm;codecs=h264',
+                     videoBitsPerSecond: 3 * 1024 * 1024
+                 });
 
-        }).catch(function(err) {
-                console.log('The following getUserMedia error occured: ' + err);
-              }
-          );
-    } else {
-      console.log('getUserMedia not supported on your browser!');
+                 mediaRecorder.start(1000); // Start recording, and dump data every second
+                 mediaRecorder.addEventListener('dataavailable', (e) => {
+                   ws.send(e.data);
+                });
+                mediaRecorder.addEventListener('stop', ()=> {
+                   ws.close.bind(ws);
+                });
+
+            }).catch(function(err) {
+                    console.log('The following getUserMedia error occured: ' + err);
+                }
+            );
+        } else {
+            console.log('getUserMedia not supported on your browser!');
+        }
     }
+
+  ngOnInit(): void {
+
   }
 
 }

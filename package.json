@@ -5,8 +5,9 @@
     "ng": "ng",
     "lite-server": "lite-server",
     "start": "ng serve",
-    "build": "ng build",
-    "b-shell": "ng run ng-media-server:app-shell & lite-server"
+    "bs": "ng build --sourceMap=true",
+    "blite": "ng run ng-media-server:app-shell & lite-server",
+    "b" : "ng run ng-media-server:app-shell"
   },
   "private": true,
   "dependencies": {
