@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-declare const MediaRecorder ;
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+declare const MediaRecorder, flvjs ;
 
 @Component({
   selector: 'app-media-server',
@@ -7,14 +7,21 @@ declare const MediaRecorder ;
   styleUrls: ['./media-server.component.css']
 })
 export class MediaServerComponent implements OnInit {
-  src = ''
   constructor() { }
-    onStartVideo(){
-      this.src = 'http://localhost:7000/media/live/stream/index.m3u8';
+   @ViewChild('vv', {read : ElementRef}) public vv : ElementRef;
+   
+  onStartVideo(){
+	if (flvjs.isSupported()) {
+	    var flvPlayer = flvjs.createPlayer({
+		type: 'flv',
+		url:'http://127.0.0.1:7000/life/111.flv'
+	    });
+	    flvPlayer.attachMediaElement(this.vv.nativeElement);
+	    flvPlayer.load();
+	    flvPlayer.play();
+	}
     }
-
-
-  onStartTranslation(){
+    onStartTranslation(){
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
              navigator.mediaDevices.getUserMedia (
                 {
@@ -24,7 +31,6 @@ export class MediaServerComponent implements OnInit {
 
                 let url = window.location.origin.replace('http', 'ws');
                 const ws = new WebSocket(url + '/');
-
                 ws.addEventListener('open', (e) => {
                     console.log('WebSocket Open', e);
                 });
@@ -32,7 +38,6 @@ export class MediaServerComponent implements OnInit {
                     ws.close();
                     console.log('WebSocket Close', e);
                 });
-
                 const mediaRecorder = new MediaRecorder(stream, {
                      mimeType: 'video/webm;codecs=h264',
                      videoBitsPerSecond: 3 * 1024 * 1024

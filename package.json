@@ -7,7 +7,7 @@
     "start": "ng serve",
     "bs": "ng build --sourceMap=true",
     "blite": "ng run ng-media-server:app-shell & lite-server",
-    "b" : "ng run ng-media-server:app-shell"
+    "b": "ng run ng-media-server:app-shell"
   },
   "private": true,
   "dependencies": {
